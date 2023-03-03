@@ -376,7 +376,7 @@ class QuantTrainPAct2(layers.PAct2):
             clip_min, clip_max, scale, scale_inv = self.get_clips_scale_act(xq, use_per_channel_q=use_per_channel_q)
             width_min, width_max = self.get_widths_act()
             # no need to call super().forward here as clipping with width_min/windth_max-1 after scaling has the same effect.
-            yq = layers.quantize_dequantize_g(xq, scale, width_min, width_max-1, self.power2_activation_range, 1, 'round_up')
+            yq = layers.quantize_dequantize_g(xq, scale, width_min, width_max - 1, self.power2_activation_range, 1, 'round_up')
             if self.verbose_mode:
                 print(f"layer: {self.name} feature_scale = {scale}")
             #
@@ -503,7 +503,7 @@ class QuantTrainPAct2(layers.PAct2):
                 # do fake quantization of weights
                 width_min, width_max = self.get_widths_w()
                 per_channel_q_axis = 1 if is_deconv else 0
-                merged_weight = layers.quantize_dequantize_g(merged_weight, weight_scale2, width_min, width_max-1,
+                merged_weight = layers.quantize_dequantize_g(merged_weight, weight_scale2, width_min, width_max - 1,
                                                              self.power2_weight_range, per_channel_q_axis, 'round_sym')
                 if self.verbose_mode:
                     print(f"layer: {self.name} weight_scale = {weight_scale2}")
@@ -592,7 +592,7 @@ class QuantTrainPAct2(layers.PAct2):
         w_min, w_max = utils.extrema_fast(tensor.data, range_shrink_percentile=self.range_shrink_weights)
         clip_max = torch.max(torch.abs(w_min), torch.abs(w_max))
         clip_max = torch.clamp(clip_max, min=self.eps)
-        clip_max2 = layers.functional.ceil2_g(clip_max) if self.power2_weight_range else clip_max
+        clip_max2 = ti_qat.xnn.layers.functional.ceil2_g(clip_max) if self.power2_weight_range else clip_max
         clip_min2 = -clip_max2
         return (clip_min2, clip_max2)
 

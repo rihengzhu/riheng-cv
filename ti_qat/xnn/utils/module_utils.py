@@ -37,7 +37,7 @@ from .. import layers
 
 def is_normalization(module):
     is_norm = isinstance(module, (torch.nn.BatchNorm2d, layers.DefaultNorm2d,
-                                 torch.nn.GroupNorm, layers.GroupBatchNorm2d))
+                                  torch.nn.GroupNorm, layers.GroupBatchNorm2d))
     return is_norm
 
 

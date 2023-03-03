@@ -144,11 +144,11 @@ def check_model_data(model, data, verbose=False, ignore_names=('num_batches_trac
     #         print(f"size mismatch for layer k expected:{model_dict[k].size()}, got:{data[k].size()}")
 
     if missing_weights:
-        print_utils.print_yellow("=> The following layers in the model could not be loaded from pre-trained: ", *missing_weights, sep = "\n")
+        print_utils.print_yellow("=> The following layers in the model could not be loaded from pre-trained: ", *missing_weights, sep ="\n")
     if not_matching_sizes:
-        print_utils.print_yellow("=> The shape of the following weights did not match: ", *not_matching_sizes, sep = "\n")
+        print_utils.print_yellow("=> The shape of the following weights did not match: ", *not_matching_sizes, sep ="\n")
     if extra_weights:
-        print_utils.print_yellow("=> The following weights in pre-trained were not used: ", *extra_weights, sep = "\n")
+        print_utils.print_yellow("=> The following weights in pre-trained were not used: ", *extra_weights, sep ="\n")
                 
     return missing_weights, extra_weights, not_matching_sizes
 

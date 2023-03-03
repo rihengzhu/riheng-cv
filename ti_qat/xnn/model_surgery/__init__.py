@@ -96,8 +96,8 @@ def _replace_conv2d(current_m=None, groups_dw=None, group_size_dw=1,
             activation = (current_m.with_activation[0],current_m.with_activation[1]) if hasattr(current_m, "with_activation") else \
                 (with_activation[0],with_activation[1])
             new_m = layers.ConvDWSepNormAct2d(in_planes=current_m.in_channels, out_planes=current_m.out_channels,
-                        kernel_size=current_m.kernel_size, stride=current_m.stride, groups_dw=groups_dw, group_size_dw=group_size_dw,
-                        bias=with_bias, normalization=normalization, activation=activation)
+                                              kernel_size=current_m.kernel_size, stride=current_m.stride, groups_dw=groups_dw, group_size_dw=group_size_dw,
+                                              bias=with_bias, normalization=normalization, activation=activation)
             return new_m
         #
     #

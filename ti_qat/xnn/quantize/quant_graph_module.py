@@ -51,7 +51,7 @@ class QuantGraphModule(HookedModule):
                                     layers.AddBlock, layers.CatBlock, layers.MultBlock, torch.nn.MaxPool2d, torch.nn.AvgPool2d)
 
         # this block is not quantized. Also if the next block is this, current block is not quantized
-        self.ignore_out_blocks = (layers.NoQAct,torch.nn.Dropout2d)
+        self.ignore_out_blocks = (layers.NoQAct, torch.nn.Dropout2d)
 
         # quantize the input to a block (under  a certain conditions of the input was not already quantized)
         self.quantize_in = quantize_in
@@ -323,13 +323,15 @@ class QuantGraphModule(HookedModule):
                 quantize_out = True
             #
         elif utils.is_conv(module) or utils.is_deconv(module):
-            if len(next_modules)==1 and (utils.is_normalization(next_modules[0]) or utils.is_activation(next_modules[0])):
+            if len(next_modules)==1 and (
+                    utils.is_normalization(next_modules[0]) or utils.is_activation(next_modules[0])):
                 quantize_out = False
             else:
                 quantize_out = True
             #
         elif utils.is_linear(module):
-            if len(next_modules)==1 and (utils.is_normalization(next_modules[0]) or utils.is_activation(next_modules[0])):
+            if len(next_modules)==1 and (
+                    utils.is_normalization(next_modules[0]) or utils.is_activation(next_modules[0])):
                 quantize_out = False
             else:
                 quantize_out = True
