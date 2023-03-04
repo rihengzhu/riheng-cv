@@ -9,6 +9,9 @@ dist/
 eggs/
 .eggs/
 .idea/*
+.idea
+.vscode
+*.njsproj
 .pytest_cache/*
 __pycache__/*
 *.pyc
