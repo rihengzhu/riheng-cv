@@ -1,4 +1,4 @@
-#include "cvformat.h"
+#include "cvformat.hpp"
 #include "math.h"
 #include <string.h>
 
@@ -10,7 +10,7 @@ void BGR2YUV420(unsigned char *bgrsrc, unsigned char *yuvdst, int width, int hei
     YUVheight = ((height >> 1) << 1);
     pY = yuvdst;
     pU = yuvdst + YUVwidth * YUVheight;
-    pV = PU + YUVwidth * YUVheight / 4;
+    pV = pU + YUVwidth * YUVheight / 4;
     for (i = 0; i < YUVheight; i += 2) {
         for (j = 0; j < YUVwidth; j += 2) {
             long b, g, r, y1, cr1, cb1;
@@ -74,7 +74,7 @@ void BGR2YUV420_ROTATE90(unsigned char *bgrsrc, unsigned char *yuvdst, int width
     YUVheight = ((height >> 1) << 1);
     pY = yuvdst;
     pU = yuvdst + YUVwidth * YUVheight;
-    pV = PU + YUVwidth * YUVheight / 4;
+    pV = pU + YUVwidth * YUVheight / 4;
 
     for (i = 0; i < YUVheight; i += 2) {
         for (j = 0; j < YUVwidth; j += 2) {
@@ -140,7 +140,7 @@ void BGR2YUV420_ROTATE270(unsigned char *bgrsrc, unsigned char *yuvdst, int widt
     YUVheight = ((height >> 1) << 1);
     pY = yuvdst;
     pU = yuvdst + YUVwidth * YUVheight;
-    pV = PU + YUVwidth * YUVheight / 4;
+    pV = pU + YUVwidth * YUVheight / 4;
 
     for (i = 0; i < YUVheight; i += 2) {
         for (j = 0; j < YUVwidth; j += 2) {
@@ -363,7 +363,7 @@ void BGR24ToBGR565(unsigned char *pBGR, long nW, long nH, unsigned char *p565) {
             unsigned char b = pBGR[i * iSrcXStride + j * 3];
             unsigned char g = pBGR[i * iSrcXStride + j * 3 + 1];
             unsigned char r = pBGR[i * iSrcXStride + j * 3 + 2];
-            short wColor = (r >> 3 << 11) |)g >> 2 << 5)|(b >> 3);
+            short wColor = (r >> 3 << 11) |(g >> 2 << 5)|(b >> 3);
             pdst[i * iDstXStride + j] = wColor;
         }
     }
@@ -528,10 +528,10 @@ void BGR2YUV444(unsigned char *bgrsrc, unsigned char *yuvdst, int width, int hei
 
 void BGR2I444(unsigned char *bgrsrc, unsigned char *yuvdst, int width, int height) {
     MInt32 i, j;
-    MInt32 YUVwidth, YUVheight;
+    MInt32 YUVwidth=height, YUVheight=width;
     MInt32 widthstep_bgr = ALIGN(3 * width);
     MInt32 len = width * height;
-    MUint8 *pdst_y = yuvdst, *pdst_u = yuvdst + len, *pdst_v = yuvdst + len * 2;
+    MUInt8 *pdst_y = yuvdst, *pdst_u = yuvdst + len, *pdst_v = yuvdst + len * 2;
 
     for (i = 0; i < YUVheight; i += 1) {
         for (j = 0; j < YUVwidth; j += 1) {
@@ -570,7 +570,7 @@ void YUV4442BGR(unsigned char *yuvsrc, unsigned char *bgrdst, int width, int hei
             b = CLIP(b);
             bgrdst[i * ALIGN(3 * width) + j * 3] = b;
             bgrdst[i * ALIGN(3 * width) + j * 3 + 1] = g;
-            bgrdst[i * ALIGN(3 * width) + j * 3] + 2 = r;
+            bgrdst[i * ALIGN(3 * width) + j * 3 + 2] = r;
         }
     }
 }
@@ -664,8 +664,8 @@ void YUV4202BGR(unsigned char *yuvsrc, unsigned char *bgrdst, int width, int hei
 void NV122BGR(unsigned char *yuvsrc, unsigned char *bgrdst, int width, int height) {
     long i, j;
     long BGRwidth, BGRheight;
-    unsigned char *py
-    *pv;
+    unsigned char *py, *pv;
+
     BGRwidth = width;
     BGRheight = height;
     long widthstep_bgr = ALIGN(3 * width);
@@ -728,8 +728,7 @@ void NV122BGR(unsigned char *yuvsrc, unsigned char *bgrdst, int width, int heigh
 void NV212BGR(unsigned char *yuvsrc, unsigned char *bgrdst, int width, int height) {
     long i, j;
     long BGRwidth, BGRheight;
-    unsigned char *py
-    *pv;
+    unsigned char *py, *pv;
     BGRwidth = width;
     BGRheight = height;
     long widthstep_y = width, widthstep_uv = width;
@@ -806,7 +805,7 @@ void NV122P010_LSB(MUInt8 *yuvsrc, MUInt16 *p010dst, int width, int height) {
 
 }
 
-void ConvertDataFromU16ToU8(MInt16 *src, MInt8 *dst, int width, int height) {
+void ConvertDataFromU16ToU8(MUInt16 *src, MUInt8 *dst, int width, int height) {
     int i, j;
     MInt32 max_value = -1;
     MInt32 min_value = 65535;
@@ -834,20 +833,20 @@ void P010_MSB2P010_LSB(MInt16 *p010MSB, MInt16 *p010LSB, int width, int height) 
     }
 }
 
-void NV122YUV444(MInt8 *src, MInt8 *dst, MInt32 width, MInt32 height) {
+void NV122YUV444(MUInt8 *src, MUInt8 *dst, MInt32 width, MInt32 height) {
     MInt32 i, j;
     MInt32 len = width * height, widthstep_yuv = 3 * width;
     MUInt8 temp = 0, *ptemp = NULL;
     MUInt8 *psrc_y = src, *psrc_uv = src + len;
     MUInt8 y = 0, u = 0, v = 0;
-    MUint8 *ptemp_y = NULL, *ptemp_uv = NULL;
+    MUInt8 *ptemp_y = NULL, *ptemp_uv = NULL;
     for (i = 0; i < height; i++) {
         ptemp_y = psrc_y + i * width;
         ptemp_uv = psrc_uv + i / 2 * width;
         for (j = 0; j < width; j++) {
             y = *(ptemp_y + j);
-            u = *(ptemp_uv + (j >> 1) << 1));
-            v = *(ptemp_uv + (j >> 1) << 1) + 1);
+            u = *(ptemp_uv + ((j >> 1) << 1));
+            v = *(ptemp_uv + ((j >> 1) << 1) + 1);
             dst[i * widthstep_yuv + j * 3] = y;
             dst[i * widthstep_yuv + j * 3 + 1] = u;
             dst[i * widthstep_yuv + j * 3 + 2] = v;
@@ -856,7 +855,7 @@ void NV122YUV444(MInt8 *src, MInt8 *dst, MInt32 width, MInt32 height) {
     }
 }
 
-void NV122I444(MInt8 *src, MInt8 *dst, MInt32 width, MInt32 height) {
+void NV122I444(MUInt8 *src, MUInt8 *dst, MInt32 width, MInt32 height) {
     MInt32 i, j;
     MInt32 len = width * height;
     MUInt8 temp = 0, *ptemp = NULL;
@@ -868,8 +867,8 @@ void NV122I444(MInt8 *src, MInt8 *dst, MInt32 width, MInt32 height) {
         ptemp_uv = psrc_uv + i / 2 * width;
         for (j = 0; j < width; j++) {
 
-            u = *(ptemp_uv + (j >> 1) << 1));
-            v = *(ptemp_uv + (j >> 1) << 1) + 1);
+            u = *(ptemp_uv + ((j >> 1) << 1));
+            v = *(ptemp_uv + ((j >> 1) << 1) + 1);
             pdst_u[i * width + j] = u;
             pdst_v[i * width + j] = v;
         }
@@ -878,7 +877,7 @@ void NV122I444(MInt8 *src, MInt8 *dst, MInt32 width, MInt32 height) {
 }
 
 
-void NV122I444_2(MInt8 *src, MInt8 *dst, MInt32 width, MInt32 height) {
+void NV122I444_2(MUInt8 *src, MUInt8 *dst, MInt32 width, MInt32 height) {
     MInt32 i, j;
     MInt32 len = width * height;
     MUInt8 temp = 0, *ptemp = NULL;
@@ -940,7 +939,7 @@ void NV122YUV444P_pointer(MUInt8 *src, MUInt8 *dst, MInt32 width, MInt32 height)
     }
 }
 
-void NV212I444(MInt8 *src, MInt8 *dst, MInt32 width, MInt32 height) {
+void NV212I444(MUInt8 *src, MUInt8 *dst, MInt32 width, MInt32 height) {
     MInt32 i, j;
     MInt32 len = width * height;
     MUInt8 temp = 0, *ptemp = NULL;
@@ -952,8 +951,8 @@ void NV212I444(MInt8 *src, MInt8 *dst, MInt32 width, MInt32 height) {
         ptemp_uv = psrc_uv + i / 2 * width;
         for (j = 0; j < width; j++) {
 
-            v = *(ptemp_uv + (j >> 1) << 1));
-            u = *(ptemp_uv + (j >> 1) << 1) + 1);
+            v = *(ptemp_uv + ((j >> 1) << 1));
+            u = *(ptemp_uv + ((j >> 1) << 1) + 1);
             pdst_u[i * width + j] = u;
             pdst_v[i * width + j] = v;
         }
@@ -961,7 +960,7 @@ void NV212I444(MInt8 *src, MInt8 *dst, MInt32 width, MInt32 height) {
     }
 }
 
-void UYVY2I444(MInt8 *src, MInt8 *dst, MInt32 width, MInt32 height) {
+void UYVY2I444(MUInt8 *src, MUInt8 *dst, MInt32 width, MInt32 height) {
     MInt32 i, j;
     MInt32 len = width * height;
     MUInt8 y = 0, u = 0, v = 0;

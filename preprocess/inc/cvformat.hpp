@@ -1,12 +1,12 @@
 #ifndef _CVT_FORMAT_HEADER_
 #define _CVT_FORMAT_HEADER_
 
-#include "asvloffscreen.h"
-#include "amcomdef.h"
+#include "asvloffscreen.hpp"
+#include "amcomdef.hpp"
 
-#ifdef __cplusplus
-extern "C"{
-#endif
+//#ifdef __cplusplus
+//extern "C"{
+//#endif
 
 #define fix(x,n) (long long)((x)*((long long)(1)<<(n)) + 0.5)
 #define yuvYr fix(0.299,10)
@@ -34,7 +34,8 @@ extern "C"{
 void BGR2YUV444(unsigned char* bgrsrc, unsigned char* yuvdst, int width, int height);
 void BGR2I444(unsigned char* bgrsrc, unsigned char* yuvdst, int width, int height);
 void BGR2YUV422(unsigned char* bgrsrc, unsigned char* yuvdst, int width, int height);
-void BGR2UYYV422(unsigned char* bgrsrc, unsigned char* yuvdst, int width, int height);
+void BGR2VYUY422(unsigned char* bgrsrc, unsigned char* yuvdst, int width, int height);
+void BGR2UYVY422(unsigned char* bgrsrc, unsigned char* yuvdst, int width, int height);
 void BGR2YUYV422(unsigned char* bgrsrc, unsigned char* yuvdst, int width, int height);
 void BGR2Y8(unsigned char* bgrsrc, unsigned char* yuvdst, int width, int height);
 void BGR22ToBGR565(unsigned char* bgrsrc, unsigned char* yuvdst, int width, int height);
@@ -61,8 +62,8 @@ void NV122I444(MUInt8* src, MUInt8* dst, MInt32 width, MInt32 height);
 void NV122I444_2(MUInt8* src, MUInt8* dst, MInt32 width, MInt32 height);
 void NV212I444(MUInt8* src, MUInt8* dst, MInt32 width, MInt32 height);
 void UYVY2I444(MUInt8* src, MUInt8* dst, MInt32 width, MInt32 height);
-#ifdef __cplusplus
-}
-#endif
+//#ifdef __cplusplus
+//}
+//#endif
 #endif
 
